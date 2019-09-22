@@ -47,24 +47,7 @@ public class NettyClient {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) {
                             socketChannel.pipeline()
-                                    .addLast(new SimpleChannelInboundHandler<ByteBuf>() {
-
-                                        @Override
-                                        public void channelActive(ChannelHandlerContext ctx) {
-                                            ctx.writeAndFlush(Unpooled.copiedBuffer("Hello Server", CharsetUtil.UTF_8));
-                                        }
-
-                                        @Override
-                                        protected void channelRead0(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf) {
-                                            System.out.println("Client received: " + byteBuf.toString(CharsetUtil.UTF_8));
-                                        }
-
-                                        @Override
-                                        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-                                            cause.printStackTrace();
-                                            ctx.close();
-                                        }
-                                    });
+                                    .addLast(new ClientChannelHandler());
                         }
                     });
             ChannelFuture channelFuture = bootstrap.connect().sync();
